@@ -1,9 +1,12 @@
 base:
   random_state: 42
+  sample_size: 0.1
 
-dataset:
+data_preprocessing:
   dev_recordings_metadata_fpath: "data/slurp_dataset/slurp/devel.jsonl"
   recordings_dir: "data/slurp_dataset/audio/slurp_real"
+
+  output_fpath: "data/preprocessed_dataset.csv"
 
 convert_asr_model:
   input_model_path_or_id: "facebook/wav2vec2-base-960h"
@@ -12,3 +15,9 @@ convert_asr_model:
 convert_nlu_model:
   input_model_path_or_id: "sankar1535/slurp-intent_baseline-distilbert-base-uncased"
   output_model_path: "models/slurp-intent_baseline-distilbert-base-uncased.onnx"
+
+asr_inference:
+  output_fpath: "data/asr_predictions.csv"
+
+nlu_inference:
+  output_fpath: "data/nlu_predictions.csv"
