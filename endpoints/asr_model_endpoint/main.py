@@ -19,7 +19,7 @@ def read_root():
     return "This is ASR model endpoint"
 
 @app.post("/predict")
-def predict(file: UploadFile = None):
+async def predict(file: UploadFile = None):
     if not file:
         raise HTTPException(status_code=400, detail="File is not provided")
 
@@ -29,7 +29,7 @@ def predict(file: UploadFile = None):
         raise HTTPException(status_code=400, detail="Invalid file format")
 
     prediction = model.predict(file.file)
-    return {"prediction": prediction}
+    return {"transcript": prediction}
 
 
 if __name__ == "__main__":

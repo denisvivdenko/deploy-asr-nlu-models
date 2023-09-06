@@ -8,7 +8,7 @@ from transformers import Wav2Vec2Processor, AutoTokenizer, AutoModelForSequenceC
 
 
 class Wav2Vec2ONNXInference():
-    def __init__(self,model_name,onnx_path):
+    def __init__(self, model_name, onnx_path):
         self.processor = Wav2Vec2Processor.from_pretrained(model_name) 
         options = rt.SessionOptions()
         options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL
@@ -33,7 +33,7 @@ class Wav2Vec2ONNXInference():
     
 
 class NLUONNXInference():
-    def __init__(self,model_name,onnx_path):
+    def __init__(self, model_name, onnx_path):
         self.processor = AutoTokenizer.from_pretrained(model_name)
         options = rt.SessionOptions()
         options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL

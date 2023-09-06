@@ -9,6 +9,8 @@ services:
       - "8000:8000"
 
   nlu_model_endpoint:
+    environment:
+      - ASR_MODEL_ENDPOINT=http://asr_model_endpoint:8000/predict
     build:
       context: .
       dockerfile: endpoints/nlu_model_endpoint/Dockerfile
