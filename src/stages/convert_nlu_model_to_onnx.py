@@ -1,7 +1,6 @@
 import argparse
-import logging
 
-from src.utils.configuration import load_params
+from src.utils.configuration import load_params, logging
 from src.utils.convert_to_onnx import convert_nlu_model2onnx
 
 
@@ -11,6 +10,7 @@ if __name__ == "__main__":
         "--config",
         dest="config",
         type=str,
+        required=True
     )
     args = argparser.parse_args()
     config_fpath = args.config

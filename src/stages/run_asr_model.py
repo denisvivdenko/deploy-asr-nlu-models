@@ -1,8 +1,7 @@
 import argparse
-import logging
 from tqdm import tqdm
 
-from src.utils.configuration import load_params
+from src.utils.configuration import load_params, logging
 from src.utils.inference_onnx import Wav2Vec2ONNXInference
 from src.utils.data_preprocessing import preprocess_slurp_dataset
 
@@ -12,7 +11,8 @@ if __name__ == "__main__":
     argparser.add_argument(
         "--config",
         dest="config",
-        type=str
+        type=str,
+        required=True
     )
     args = argparser.parse_args()
     params = load_params(args.config)
@@ -32,4 +32,4 @@ if __name__ == "__main__":
     logging.info("Start inference...")
     for _, row in tqdm(data.iterrows()):
         prediction = model.predict(row["recordings"])
-        logging.info(f"Real: {row['sentence']}\t Pred: {prediction}")
+        logging.info(f"\nReal: {row['sentence']}\n Pred: {prediction}\n")
