@@ -1,0 +1,50 @@
+name: experiment-workflow
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    env:
+      GCP_CREDENTIALS_BASE64: ${{ secrets.GCP_CREDENTIALS_BASE64 }}
+      REPO_TOKEN: ${{ secrets.MY_GITHUB_PAT }}
+      GOOGLE_APPLICATION_CREDENTIALS: gcp-credentials.json
+ 
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10' 
+
+    - name: Install first dependencies
+      run: |
+        sudo apt update
+        sudo apt install nodejs npm -y
+
+    - uses: iterative/setup-cml@v1
+
+
+    - name: Install dependencies
+      run: |
+        pip install dvc==3.17.0 --force-reinstall
+        dvc --version
+        pip install -e .
+
+    - name: Set up DVC
+      run: |
+        echo "$GCP_CREDENTIALS_BASE64" | base64 --decode > gcp-credentials.json
+        chmod 600 gcp-credentials.json
+        echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/gcp-credentials.json" >> $GITHUB_ENV
+        dvc pull -v
+
+    - name: Run DVC experiments
+      env:
+        REPO_TOKEN: ${{ secrets.MY_GITHUB_PAT }}
+      run: |
+        dvc repro
+        dvc push
+
+        echo "# Experiment" > report.md
+        echo "## Metrics" >> report.md
+        cat metrics/metrics.json >> report.md
+        cml comment create report.md

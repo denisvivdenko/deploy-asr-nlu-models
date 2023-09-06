@@ -1,3 +1,4 @@
+dvc==3.17.0
 fastapi==0.103.1
 numpy==1.25.2
 onnxruntime==1.15.1
@@ -10,3 +11,6 @@ torch==2.0.1
 tqdm==4.66.1
 transformers==4.33.0
 uvicorn==0.23.2
+dvc-gs
+dvc-gdrive
+onnx

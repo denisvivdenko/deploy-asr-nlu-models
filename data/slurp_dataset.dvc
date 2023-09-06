@@ -1,6 +1,6 @@
 outs:
-- md5: 3dc97e7e210027726f16f42365589002.dir
-  size: 13566351827
-  nfiles: 141662
+- md5: 0fbe0c8c7db276a7359068ba2ddf2e13.dir
+  size: 3977096200
+  nfiles: 7
   hash: md5
   path: slurp_dataset

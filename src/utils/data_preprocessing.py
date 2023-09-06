@@ -1,5 +1,25 @@
 import pandas as pd
 from pathlib import Path
+import os
+import tarfile
+
+
+def unpack_dataset(tar_path, extract_to=None):
+    """
+    Unpacks a .tar.gz file.
+
+    Parameters:
+    - tar_path (str): Path to the .tar.gz file.
+    - extract_to (str, optional): Directory to extract files to. If None, extracts to the same directory as the .tar.gz file.
+    """
+    if extract_to is None:
+        extract_to = os.path.dirname(tar_path)
+
+    if not os.path.exists(extract_to):
+        os.makedirs(extract_to)
+
+    with tarfile.open(tar_path, 'r:gz') as tar_ref:
+        tar_ref.extractall(extract_to)
 
 
 def filter_best_recording(recordings: list[dict]) -> str:

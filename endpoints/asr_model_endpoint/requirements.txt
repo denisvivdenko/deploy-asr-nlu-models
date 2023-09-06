@@ -7,3 +7,4 @@ soundfile==0.12.1
 tqdm==4.66.1
 uvicorn==0.23.2
 python-multipart
+dvc-gs

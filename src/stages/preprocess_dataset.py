@@ -1,7 +1,7 @@
 import argparse
 
 from src.utils.configuration import load_params, logging
-from src.utils.data_preprocessing import preprocess_slurp_dataset
+from src.utils.data_preprocessing import preprocess_slurp_dataset, unpack_dataset
 
 
 if __name__ == "__main__":
@@ -15,6 +15,11 @@ if __name__ == "__main__":
     )
     args = argparser.parse_args()
     params = load_params(args.config)
+
+    unpack_dataset(
+        tar_path=params["data_preprocessing"]["tarfile_dataset_fpath"],
+        extract_to=params["data_preprocessing"]["extract_to"]
+    )
 
     data = preprocess_slurp_dataset(
         recordings_metadata_fpath=params["data_preprocessing"]["dev_recordings_metadata_fpath"],
