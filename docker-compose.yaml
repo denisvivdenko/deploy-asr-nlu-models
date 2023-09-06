@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  asr_model_endpoint:
+    build:
+      context: .
+      dockerfile: endpoints/asr_model_endpoint/Dockerfile
+
