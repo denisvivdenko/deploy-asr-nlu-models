@@ -1,0 +1,10 @@
+base:
+  random_state: 42
+
+convert_asr_model:
+  input_model_path_or_id: "facebook/wav2vec2-base-960h"
+  output_model_path: "models/wav2vec2-base-960h.onnx"
+
+convert_nlu_model:
+  input_model_path_or_id: "sankar1535/slurp-intent_baseline-distilbert-base-uncased"
+  output_model_path: "models/slurp-intent_baseline-distilbert-base-uncased.onnx"
