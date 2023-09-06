@@ -104,3 +104,38 @@ stages:
       hash: md5
       md5: bab02ddeab9179d2c5d5813871a21f24
       size: 4534
+  evaluation:
+    cmd: python src/stages/evaluation.py --config=params.yaml
+    deps:
+    - path: data/nlu_predictions.csv
+      hash: md5
+      md5: bab02ddeab9179d2c5d5813871a21f24
+      size: 4534
+    - path: data/preprocessed_dataset.csv
+      hash: md5
+      md5: 053691fb323da24981fc1c1e03ec2c0d
+      size: 23683
+    params:
+      params.yaml:
+        asr_inference:
+          output_fpath: data/asr_predictions.csv
+        base:
+          random_state: 42
+          sample_size: 0.1
+        convert_asr_model:
+          input_model_path_or_id: facebook/wav2vec2-base-960h
+          output_model_path: models/asr_model.onnx
+        convert_nlu_model:
+          input_model_path_or_id: sankar1535/slurp-intent_baseline-distilbert-base-uncased
+          output_model_path: models/nlu_model.onnx
+        data_preprocessing:
+          dev_recordings_metadata_fpath: data/slurp_dataset/slurp/devel.jsonl
+          recordings_dir: data/slurp_dataset/audio/slurp_real
+          output_fpath: data/preprocessed_dataset.csv
+        nlu_inference:
+          output_fpath: data/nlu_predictions.csv
+    outs:
+    - path: metrics/metrics.json
+      hash: md5
+      md5: c7cd583121bd0e73bef2eb57e195ecc0
+      size: 34

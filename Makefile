@@ -36,9 +36,18 @@ deploy_nlu_inference:
 	--params base,data_preprocessing,convert_nlu_model,asr_inference \
 	python src/stages/run_nlu_model.py --config="params.yaml"; \
 
+deploy_evaluation:
+	dvc stage add --force --name evaluation \
+	--deps data/nlu_predictions.csv \
+	--deps data/preprocessed_dataset.csv \
+	--metrics metrics/metrics.json \
+	--params base,data_preprocessing,convert_nlu_model,convert_asr_model,asr_inference,nlu_inference \
+	python src/stages/evaluation.py --config="params.yaml"; \
+
 deploy_all:
 	make deploy_convert_asr_model_to_onnx; \
 	make deploy_convert_nlu_model_to_onnx; \
 	make deploy_preprocess_dataset; \
 	make deploy_asr_inference; \
 	make deploy_nlu_inference; \
+	make deploy_evaluation; \

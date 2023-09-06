@@ -44,3 +44,17 @@ stages:
     - data_preprocessing
     outs:
     - data/nlu_predictions.csv
+  evaluation:
+    cmd: python src/stages/evaluation.py --config=params.yaml
+    deps:
+    - data/nlu_predictions.csv
+    - data/preprocessed_dataset.csv
+    params:
+    - asr_inference
+    - base
+    - convert_asr_model
+    - convert_nlu_model
+    - data_preprocessing
+    - nlu_inference
+    metrics:
+    - metrics/metrics.json
