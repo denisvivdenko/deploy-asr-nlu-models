@@ -1,0 +1,46 @@
+stages:
+  convert_asr_model_to_onnx:
+    cmd: python src/stages/convert_asr_model_to_onnx.py --config=params.yaml
+    params:
+    - base
+    - convert_asr_model
+    outs:
+    - models/asr_model.onnx
+  convert_nlu_model_to_onnx:
+    cmd: python src/stages/convert_nlu_model_to_onnx.py --config=params.yaml
+    params:
+    - base
+    - convert_nlu_model
+    outs:
+    - models/nlu_model.onnx
+  preprocess_dataset:
+    cmd: python src/stages/preprocess_dataset.py --config=params.yaml
+    deps:
+    - data/slurp_dataset
+    outs:
+    - data/preprocessed_dataset.csv
+    params:
+    - base
+    - data_preprocessing
+  asr_inference:
+    cmd: python src/stages/run_asr_model.py --config=params.yaml
+    deps:
+    - models/asr_model.onnx
+    params:
+    - asr_inference
+    - base
+    - convert_asr_model
+    - data_preprocessing
+    outs:
+    - data/asr_predictions.csv
+  nlu_model:
+    cmd: python src/stages/run_nlu_model.py --config=params.yaml
+    deps:
+    - models/nlu_model.onnx
+    params:
+    - asr_inference
+    - base
+    - convert_nlu_model
+    - data_preprocessing
+    outs:
+    - data/nlu_predictions.csv

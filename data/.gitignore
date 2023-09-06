@@ -1,2 +1,5 @@
 /test.wav
 /slurp_dataset
+/preprocessed_dataset.csv
+/asr_predictions.csv
+/nlu_predictions.csv

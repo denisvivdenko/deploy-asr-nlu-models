@@ -22,7 +22,7 @@ if __name__ == "__main__":
     will be saved to {params['convert_asr_model']['output_model_path']}
     """)
     convert_nlu_model2onnx(
-        params["convert_asr_model"]["input_model_path_or_id"],
-        params["convert_asr_model"]["output_model_path"]
+        params["convert_nlu_model"]["input_model_path_or_id"],
+        params["convert_nlu_model"]["output_model_path"]
     )
     logging.info("Finished converting nlu model to onnx")
