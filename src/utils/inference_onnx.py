@@ -1,6 +1,7 @@
 import soundfile as sf
 import torch
 import onnxruntime as rt
+from typing import BinaryIO
 import numpy as np
 
 from transformers import Wav2Vec2Processor, AutoTokenizer, AutoModelForSequenceClassification
@@ -25,7 +26,7 @@ class Wav2Vec2ONNXInference():
         transcription = self.processor.decode(prediction.squeeze().tolist())
         return transcription.lower()
 
-    def predict(self, filename: str):
+    def predict(self, filename: str | BinaryIO):
         audio_input, samplerate = sf.read(filename)
         assert samplerate == 16000
         return self.buffer_to_text(audio_input)

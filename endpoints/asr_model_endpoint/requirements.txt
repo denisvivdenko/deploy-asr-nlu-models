@@ -1,2 +1,9 @@
-fastapi 
-uvicorn
+fastapi==0.103.1
+numpy==1.25.2
+pandas==2.1.0
+PyYAML==6.0.1
+setuptools==59.6.0
+soundfile==0.12.1
+tqdm==4.66.1
+uvicorn==0.23.2
+python-multipart
