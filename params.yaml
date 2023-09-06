@@ -1,6 +1,10 @@
 base:
   random_state: 42
 
+dataset:
+  dev_recordings_metadata_fpath: "data/slurp_dataset/slurp/devel.jsonl"
+  recordings_dir: "data/slurp_dataset/audio/slurp_real"
+
 convert_asr_model:
   input_model_path_or_id: "facebook/wav2vec2-base-960h"
   output_model_path: "models/wav2vec2-base-960h.onnx"

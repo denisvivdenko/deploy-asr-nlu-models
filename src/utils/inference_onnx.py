@@ -10,7 +10,7 @@ from transformers import Wav2Vec2Processor, AutoTokenizer
 # - convert non 16 khz sample rates
 # - inference time log
 
-class Wave2Vec2ONNXInference():
+class Wav2Vec2ONNXInference():
     def __init__(self,model_name,onnx_path):
         self.processor = Wav2Vec2Processor.from_pretrained(model_name) 
         options = rt.SessionOptions()
