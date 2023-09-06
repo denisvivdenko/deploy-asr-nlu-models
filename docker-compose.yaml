@@ -5,4 +5,12 @@ services:
     build:
       context: .
       dockerfile: endpoints/asr_model_endpoint/Dockerfile
+    ports:
+      - "8000:8000"
 
+  nlu_model_endpoint:
+    build:
+      context: .
+      dockerfile: endpoints/nlu_model_endpoint/Dockerfile
+    ports:
+      - "8001:8001"
