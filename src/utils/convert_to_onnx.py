@@ -1,9 +1,14 @@
-from onnxruntime.quantization.quantize import quantize
-from transformers import Wav2Vec2ForCTC
 import torch
 import argparse
 
-def convert_to_onnx(model_id_or_path: str, save_path: str):
+from transformers import (
+    Wav2Vec2ForCTC, 
+    AutoTokenizer, 
+    AutoModelForSequenceClassification
+)
+
+
+def convert_wav2vec2_model2onnx(model_id_or_path: str, save_path: str):
     print(f"Converting {model_id_or_path} to onnx")
     model = Wav2Vec2ForCTC.from_pretrained(model_id_or_path)
     audio_len = 250000
@@ -22,35 +27,45 @@ def convert_to_onnx(model_id_or_path: str, save_path: str):
                                 'output' : {1 : 'audio_len'}})
 
 
-def quantize_onnx_model(onnx_model_path, quantized_model_path):
-    print("Starting quantization...")
-    from onnxruntime.quantization import quantize_dynamic, QuantType
-    quantize_dynamic(onnx_model_path,
-                     quantized_model_path,
-                     weight_type=QuantType.QUInt8)
+def convert_nlu_model2onnx(model_id_or_path: str, save_path: str):
+    tokenizer = AutoTokenizer.from_pretrained(model_id_or_path)
+    model = AutoModelForSequenceClassification.from_pretrained(model_id_or_path)
+    model.eval()
+    inputs = tokenizer("Hello, world!", return_tensors="pt")
+    dummy_input = {key: value for key, value in inputs.items()}
 
-    print(f"Quantized model saved to: {quantized_model_path}")
+    torch.onnx.export(
+        model,
+        dummy_input,
+        save_path,
+        input_names=["input_ids", "attention_mask"],
+        output_names=["output"],
+        dynamic_axes={
+            "input_ids": {0: "batch_size", 1: "sequence_length"},
+            "attention_mask": {0: "batch_size", 1: "sequence_length"},
+            "output": {0: "batch_size"}
+        },
+        opset_version=11
+    )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model",
+        "--asr-model",
         type=str,
         default="facebook/wav2vec2-base-960h",
         help="Model HuggingFace ID or path that will converted to ONNX",
     )
     parser.add_argument(
-        "--quantize",
-        action="store_true",
-        help="Whether to use also quantize the model or not",
+        "--nlu-model",
+        type=str,
+        default="sankar1535/slurp-intent_baseline-distilbert-base-uncased",
+        help="Model HuggingFace ID or path that will converted to ONNX",
     )
     args = parser.parse_args()
 
-    model_id_or_path = args.model
-    save_fpath = "models/" + model_id_or_path.split("/")[-1] + ".onnx"
-    print(save_fpath)
-    convert_to_onnx(model_id_or_path, save_fpath)
-    if (args.quantize):
-        quantized_model_name = model_id_or_path.split("/")[-1] + ".quant.onnx"
-        quantize_onnx_model(save_fpath, quantized_model_name)
+    asr_onnx_save_fpath = "models/" + args.asr_model.split("/")[-1] + ".onnx"
+    nlu_onnx_save_fpath = "models/" + args.nlu_model.split("/")[-1] + ".onnx"
+    convert_wav2vec2_model2onnx(args.asr_model, asr_onnx_save_fpath)
+    convert_nlu_model2onnx(args.nlu_model, nlu_onnx_save_fpath)
