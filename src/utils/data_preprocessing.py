@@ -3,8 +3,10 @@ from pathlib import Path
 import os
 import tarfile
 
+from src.utils.configuration import logging
 
-def unpack_dataset(tar_path, extract_to=None):
+
+def unpack_dataset(tar_path: str, extract_to: str = None) -> None:
     """
     Unpacks a .tar.gz file.
 
@@ -23,6 +25,15 @@ def unpack_dataset(tar_path, extract_to=None):
 
 
 def filter_best_recording(recordings: list[dict]) -> str:
+    """
+    Filters recordings to find the best one based on WER (Word Error Rate).
+    
+    Parameters:
+    - recordings (list[dict]): A list of dictionaries containing recording details.
+
+    Returns:
+    - str: The file path of the best recording. Returns None if no suitable recording is found.
+    """
     headset_subset = list(filter(lambda x: "headset" in x["file"], recordings))
     if not headset_subset:
         return None
@@ -30,10 +41,17 @@ def filter_best_recording(recordings: list[dict]) -> str:
     return best_recording["file"]
 
 
-def preprocess_slurp_dataset(
-    recordings_metadata_fpath: str,
-    recordings_dir: str
-) -> pd.DataFrame:
+def preprocess_slurp_dataset(recordings_metadata_fpath: str, recordings_dir: str) -> pd.DataFrame:
+    """
+    Preprocesses the SLURP dataset based on metadata and recordings directory.
+
+    Parameters:
+    - recordings_metadata_fpath (str): File path to the recordings metadata JSONL file.
+    - recordings_dir (str): The directory where the recordings are stored.
+
+    Returns:
+    - pd.DataFrame: A pandas DataFrame containing preprocessed data.
+    """
     data = pd.read_json(
         open(recordings_metadata_fpath, "r"), 
         lines=True
@@ -45,10 +63,12 @@ def preprocess_slurp_dataset(
     return data
 
 
-if __name__ == "__main__":
+def main():
     recordings_metadata_fpath = "data/slurp_dataset/slurp/devel.jsonl"
     recordings_dir = "data/slurp_dataset/audio/slurp_real"
-    print(preprocess_slurp_dataset(
-        recordings_metadata_fpath,
-        recordings_dir
-    ))
+    
+    processed_data = preprocess_slurp_dataset(recordings_metadata_fpath, recordings_dir)
+    logging.info(processed_data)
+
+if __name__ == "__main__":
+    main()

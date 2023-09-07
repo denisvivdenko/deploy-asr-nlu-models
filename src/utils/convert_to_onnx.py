@@ -1,15 +1,18 @@
 import torch
 import argparse
+from pathlib import Path
 
 from transformers import (
     Wav2Vec2ForCTC, 
     AutoTokenizer, 
     AutoModelForSequenceClassification
 )
+from src.utils.configuration import logging
 
 
-def convert_wav2vec2_model2onnx(model_id_or_path: str, save_path: str):
-    print(f"Converting {model_id_or_path} to onnx")
+def convert_wav2vec2_model2onnx(model_id_or_path: str, save_path: str) -> None:
+    """Convert a Wav2Vec2 model from HuggingFace to ONNX format."""
+    logging.info(f"Converting {model_id_or_path} to onnx")
     model = Wav2Vec2ForCTC.from_pretrained(model_id_or_path)
     audio_len = 250000
 
@@ -27,7 +30,9 @@ def convert_wav2vec2_model2onnx(model_id_or_path: str, save_path: str):
                                 'output' : {1 : 'audio_len'}})
 
 
-def convert_nlu_model2onnx(model_id_or_path: str, save_path: str):
+def convert_nlu_model2onnx(model_id_or_path: str, save_path: str) -> None:
+    """Convert an NLU model from HuggingFace to ONNX format."""
+    logging.info(f"Converting {model_id_or_path} to onnx")
     tokenizer = AutoTokenizer.from_pretrained(model_id_or_path)
     model = AutoModelForSequenceClassification.from_pretrained(model_id_or_path)
     model.eval()
@@ -65,7 +70,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    asr_onnx_save_fpath = "models/" + args.asr_model.split("/")[-1] + ".onnx"
-    nlu_onnx_save_fpath = "models/" + args.nlu_model.split("/")[-1] + ".onnx"
+    asr_onnx_save_fpath = Path("models") / (args.asr_model.split("/")[-1] + ".onnx")
+    nlu_onnx_save_fpath = Path("models") / (args.nlu_model.split("/")[-1] + ".onnx")
     convert_wav2vec2_model2onnx(args.asr_model, asr_onnx_save_fpath)
     convert_nlu_model2onnx(args.nlu_model, nlu_onnx_save_fpath)
