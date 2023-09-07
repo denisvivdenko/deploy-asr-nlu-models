@@ -33,7 +33,7 @@ Ubuntu:
 1. Git clone the repo.
 2. Put ```gcp-credentials.json``` file in your project root folder (I will send it).
 3. Using Makefile. Run 
-    ```make init_env```
+    ```make init_env``` (this project have to be installed using pip install -e .)
 4. Activate the environment ```source venv/bin/activate```.
 5. Run ```dvc pull```. You need to wait until the slurp dataset and models are loaded to your workdirectory.
 6. (Optional) Run ```dvc repro```. You will run evaluation pipeline that uses SLURP dataset sample to evaluate final model performance.
@@ -48,4 +48,45 @@ FastAPI provides docs for each enpoint therefore you could try it out, upload yo
 
 
 # How this project works 
+
+Pursuing such goals:
+1. Be able easily evaluate any experiment and model.
+2. Be to reproduce pipeline and results.
+3. Keep track of metrics in github (Each run comments in pull requests and commits)
+
+Therefore, for reproducibility I used DVC and Google Drive. 
+
+If you want to change a model you need to make changes in params.yaml (if this is a minor change that doesn't change any logic, for example, another version of model in HuggingFace)
+
+params.yaml contains all hyperparameters and model_names needed to run a pipeline.
+
+Overall:
+1. You make change in params.yaml
+2. Push to repo
+3. Everything runs in github actions and pushes the results and models to Google Drive.
+4. You run ```git pull origin <you experiment branch>```. It will fetch new dvc.lock
+5. You run ```dvc pull```, it fetches all dependencies to run your experiment.
+6. You run docker-compose to test it using webapp.
+
+You don't need to run it localy, you work won't be interrupted!
+
+
+Project structure:
+1. data/
+2. endpoints/
+    - model1/ - ASR
+        - Dockerfile
+    - model2/ - NLU model
+        - Dockerfile
+3. metrics/
+    - metrics.json
+4. models/
+    - asr_model.onnx
+    - nlu_model.onnx
+5. notebooks/
+6. src/
+    - stages/
+        pipeline stages
+    - utils/
+        utils for pipeline stages
 
