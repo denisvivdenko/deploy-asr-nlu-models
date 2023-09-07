@@ -35,7 +35,7 @@ Ubuntu:
 3. Using Makefile. Run 
     ```make init_env``` (this project have to be installed using pip install -e .)
 4. Activate the environment ```source venv/bin/activate```.
-5. Run ```dvc pull```. You need to wait until the slurp dataset and models are loaded to your workdirectory.
+5. Run ```dvc fetch``` and after ```dvc pull```. You need to wait until the slurp dataset and models are loaded to your workdirectory. (dvc pull does different, but same thing, I guess I have caught a bug :), therefore running fetch might help)
 6. (Optional) Run ```dvc repro```. You will run evaluation pipeline that uses SLURP dataset sample to evaluate final model performance.
 7. Run ```docker-compose up --build``` to build a docker compose and start two endpoints.
 
