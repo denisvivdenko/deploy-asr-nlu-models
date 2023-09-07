@@ -30,7 +30,7 @@ jobs:
         dvc --version
         pip install -e .
 
-    - name: Set up DVC
+    - name: Set up DVC pull
       run: |
         echo "$GCP_CREDENTIALS_BASE64" | base64 --decode > gcp-credentials.json
         chmod 600 gcp-credentials.json
@@ -41,10 +41,17 @@ jobs:
       env:
         REPO_TOKEN: ${{ secrets.MY_GITHUB_PAT }}
       run: |
-        dvc repro
-        dvc push
-
         echo "# Experiment" > report.md
         echo "## Metrics" >> report.md
         cat metrics/metrics.json >> report.md
         cml comment create report.md
+
+    - name: DVC push
+      run: dvc push
+
+    - name: Commit changes in dvc.lock
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Commit changes in dvc.lock
+        branch: ${{ github.head_ref }}
+        file_pattern: dvc.lock
