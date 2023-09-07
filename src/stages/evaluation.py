@@ -5,11 +5,9 @@ import pandas as pd
 from src.utils.configuration import load_params, logging
 
 
-def compute_accuracy(y_true, y_pred):
+def compute_accuracy(y_true: pd.Series, y_pred: pd.Series) -> float:
     assert len(y_true) == len(y_pred), "Both lists/series must have the same length"
-    correct = sum(t == p for t, p in zip(y_true, y_pred))
-    total = len(y_true)
-    return correct / total
+    return sum(y_true == y_pred) / len(y_true)
 
 
 if __name__ == "__main__":
@@ -26,10 +24,11 @@ if __name__ == "__main__":
 
     true_values = pd.read_csv(params["data_preprocessing"]["output_fpath"])
     predicted_values = pd.read_csv(params["nlu_inference"]["output_fpath"])
-
+    
     true_values_vs_predicted = true_values.merge(predicted_values, on="slurp_id", how="left")
-    metric = compute_accuracy(true_values_vs_predicted['intent'], true_values_vs_predicted['predictions'])
-    logging.info(f"Accuracy: {metric}")
+    groundtruth_metric = compute_accuracy(true_values_vs_predicted['intent'], true_values_vs_predicted['groundtruth_predicted_intent'])
+    asr_metric = compute_accuracy(true_values_vs_predicted['intent'], true_values_vs_predicted['asr_predicted_intent'])
+    logging.info(f"ASR Accuracy: {asr_metric}\nGroundtruth Accuracy: {groundtruth_metric}")
 
     with open("metrics/metrics.json", "w") as f:
-        json.dump({"accuracy": metric}, f)
+        json.dump({"asr_accuracy": asr_metric, "groundtruth_metric": groundtruth_metric}, f)

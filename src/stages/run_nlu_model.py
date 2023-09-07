@@ -32,12 +32,14 @@ if __name__ == "__main__":
     data = data.merge(asr_predictions, on="slurp_id", how="right")
 
     logging.info("Start inference...")
-    predictions = {"slurp_id": [], "predictions": []}
+    predictions = {"slurp_id": [], "asr_predicted_intent": [], "groundtruth_predicted_intent": []}
     for _, row in tqdm(data.iterrows()):
-        prediction = model.predict(row["recordings"])
-        logging.info(f"\nReal: {row['intent']}\nPred: {prediction}\n")
+        asr_prediction = model.predict(row["transcript"])
+        groundtruth_prediction = model.predict(row["sentence"])
+        logging.info(f"\nReal: {row['intent']}\nASR Pred: {asr_prediction}\nGroundtruth Pred: {groundtruth_prediction}\n")
         predictions["slurp_id"].append(row["slurp_id"])
-        predictions["predictions"].append(prediction)
+        predictions["asr_predicted_intent"].append(asr_prediction)
+        predictions["groundtruth_predicted_intent"].append(groundtruth_prediction)
     predictions = pd.DataFrame(predictions)
     predictions.to_csv(params["nlu_inference"]["output_fpath"])
     logging.info(f"Finished infrence. Saved results to {params['nlu_inference']['output_fpath']}")

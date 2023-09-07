@@ -51,7 +51,11 @@ jobs:
         dvc repro
         echo "# Experiment" > report.md
         echo "## Metrics" >> report.md
-        cat metrics/metrics.json >> report.md
+
+        # Use DVC metrics diff to compare metrics to master
+        git fetch --prune --unshallow
+        dvc metrics diff --show-md master >> report.md
+
         cml comment create report.md
 
     - name: DVC push

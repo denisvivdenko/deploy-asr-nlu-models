@@ -28,7 +28,7 @@ if __name__ == "__main__":
     logging.info(f"Dataset. {data.info()}\n{data.head(5)}")
 
     logging.info("Start inference...")
-    predictions = {"slurp_id": [], "predictions": []}
+    predictions = {"slurp_id": [], "transcript": []}
     for _, row in tqdm(data.iterrows()):
         try:
             prediction = model.predict(row["recordings"])
@@ -37,7 +37,7 @@ if __name__ == "__main__":
             continue
         logging.info(f"\nReal: {row['sentence']}\nPred: {prediction}\n")
         predictions["slurp_id"].append(row["slurp_id"])
-        predictions["predictions"].append(prediction)
+        predictions["transcript"].append(prediction)
     
     predictions = pd.DataFrame(predictions)
     predictions.to_csv(params["asr_inference"]["output_fpath"])
