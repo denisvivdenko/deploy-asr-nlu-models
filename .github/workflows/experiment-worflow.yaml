@@ -1,5 +1,6 @@
 name: experiment-workflow
 on: [push]
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -23,6 +24,10 @@ jobs:
 
     - uses: iterative/setup-cml@v1
 
+    - name: Set up Git user
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
 
     - name: Install dependencies
       run: |
@@ -49,9 +54,10 @@ jobs:
     - name: DVC push
       run: dvc push
 
-    - name: Commit changes in dvc.lock
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Commit changes in dvc.lock
-        branch: ${{ github.head_ref }}
-        file_pattern: dvc.lock
+    - name: Commit and push
+      run: |
+        git add dvc.lock
+        git commit -m "update dvc.lock [skip ci]"
+        BRANCH_NAME=${GITHUB_REF#refs/heads/}
+        git push origin $BRANCH_NAME
+      
