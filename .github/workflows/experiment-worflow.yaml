@@ -46,6 +46,7 @@ jobs:
       env:
         REPO_TOKEN: ${{ secrets.MY_GITHUB_PAT }}
       run: |
+        dvc repro
         echo "# Experiment" > report.md
         echo "## Metrics" >> report.md
         cat metrics/metrics.json >> report.md
