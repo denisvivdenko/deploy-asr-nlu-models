@@ -33,11 +33,12 @@ Ubuntu:
 1. Git clone the repo.
 2. Put ```gcp-credentials.json``` file in your project root folder (I will send it).
 3. Using Makefile. Run 
-    ```make init_env``` (this project have to be installed using pip install -e .)
+    ```make init_env``` 
 4. Activate the environment ```source venv/bin/activate```.
-5. Run ```dvc fetch``` and after ```dvc pull```. You need to wait until the slurp dataset and models are loaded to your workdirectory. (dvc pull does different, but same thing, I guess I have caught a bug :), therefore running fetch might help)
-6. (Optional) Run ```dvc repro```. You will run evaluation pipeline that uses SLURP dataset sample to evaluate final model performance.
-7. Run ```docker-compose up --build``` to build a docker compose and start two endpoints.
+5. This project have to be installed using ```pip install -e .```
+6. Run ```dvc fetch``` and after ```dvc pull```. You need to wait until the slurp dataset and models are loaded to your workdirectory. (dvc pull does different, but same thing, I guess I have caught a bug :), therefore running fetch might help)
+7. (Optional) Run ```dvc repro```. You will run evaluation pipeline that uses SLURP dataset sample to evaluate final model performance.
+8. Run ```docker-compose up --build``` to build a docker compose and start two endpoints. (sometimes sudo helps)
 
 Now there are two endpoints available:
 

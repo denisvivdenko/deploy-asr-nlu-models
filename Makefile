@@ -1,7 +1,11 @@
 init_env:
 	python3.10 -m venv venv; \
 	source venv/bin/activate; \
-	pip install -e .;
+	pip install -e .; \
+
+fetch_data:
+	dvc fetch; \
+	dvc pull; \
 
 deploy_convert_asr_model_to_onnx:
 	dvc stage add --force --name convert_asr_model_to_onnx \
