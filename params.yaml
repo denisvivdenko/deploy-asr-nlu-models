@@ -11,7 +11,7 @@ data_preprocessing:
   output_fpath: "data/preprocessed_dataset.csv"
 
 convert_asr_model:
-  input_model_path_or_id: "facebook/wav2vec2-base-960h"
+  input_model_path_or_id: "facebook/wav2vec2-large-960h"
   output_model_path: "models/asr_model.onnx"
 
 convert_nlu_model:
